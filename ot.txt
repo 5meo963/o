@@ -1,0 +1,171 @@
+#LED
+import RPi.GPIO as GPIO
+import time
+GPIO.setmode(GPIO.BOARD)
+led1=29
+led2=31
+led3=33
+led4=35
+GPIO.setup(led1,GPIO.OUT)
+GPIO.setup(led2,GPIO.OUT)
+GPIO.setup(led3,GPIO.OUT)
+GPIO.setup(led4,GPIO.OUT)
+GPIO.output(led1,False)
+GPIO.output(led2,False)
+GPIO.output(led3,False)
+GPIO.output(led4,False)
+def ledpattern(v1,v2,v3,v4):
+    GPIO.output(led1,v1)
+    GPIO.output(led2,v2)
+    GPIO.output(led3,v3)
+    GPIO.output(led4,v4)
+try:
+    while True:
+        for i in range(4):
+            ledpattern(1,0,0,0)
+            time.sleep(0.5)
+            ledpattern(0,1,0,0)
+            time.sleep(0.5)
+            ledpattern(0,0,1,0)
+            time.sleep(0.5)
+            ledpattern(0,0,0,1)
+            time.sleep(0.5)
+finally:
+    GPIO.cleanup()
+
+
+
+#7seg
+TM1637 Pin   | Function   | Raspberry Pi Pin    | RPi Function
+--------------------------------------------------------------
+VCC          | +5V Power  | Pin 2               | 5V Power
+GND          | Ground     | Pin 6               | Ground
+DIO          | Data In    | Pin 38 (GPIO20)     | Data In (GPIO20)
+CLK          | Clock      | Pin 40 (GPIO21)     | Clock (GPIO21)
+
+wget https://github.com/timwaizenegger/raspberrypi-examples/archive/refs/heads/master.zip
+
+
+
+
+#Osiliscope
+Connecting ADS1115 to Raspberry Pi GPIO Pins
+---------------------------------------------
+| ADC Pin | Raspberry Pi Pin | GPIO Number |
+|---------|-------------------|-------------|
+| VDD     | PIN 17            | 3.3V        |
+| GND     | PIN 9             | GND         |
+| SCL     | PIN 5             | GPIO 3      |
+| SDA     | PIN 3             | GPIO 2      |
+
+Steps to Setup
+---------------
+1. Enable I2C Interface:
+   - Run: sudo raspi-config
+   - Go to Interfacing Options → I2C → Enable.
+
+2. Update Raspberry Pi:
+   - Run: 
+     sudo apt-get update
+     sudo apt-get upgrade
+
+3. Install Dependencies:
+   - Run:
+     sudo apt-get install build-essential python-dev python-smbus git
+     sudo apt install python3-smbus
+
+4. Install Adafruit ADS1115 Library:
+   - Clone the library:
+     git clone https://github.com/adafruit/Adafruit_Python_ADS1x15.git
+   - Change directory and install:
+     cd /home/pi/Adafruit_Python_ADS1x15/
+     sudo python3 setup.py install
+
+5. Test the Library and I2C Communication:
+   - Run the example script:
+     cd examples
+     python3 simpletest.py
+
+6. Install Matplotlib (Optional):
+   - Run:
+     sudo apt-get install python3-matplotlib
+
+
+
+
+#Telegram
+import random
+import datetime
+import time
+import telepot
+import RPi.GPIO as GPIO
+from telepot.loop import MessageLoop
+
+red = 31
+now = datetime.datetime.now()
+
+GPIO.setmode(GPIO.BOARD)
+GPIO.setwarnings(False)
+GPIO.setup(red, GPIO.OUT)
+GPIO.output(red, 0)
+
+def action(msg):
+    chat_id = msg['chat']['id']
+    command = msg['text']
+    
+    print('Got command: %s' % command)
+
+    if 'On' in command:
+        GPIO.output(red, 1)
+        bot.sendMessage(chat_id, "Red light turned on")
+
+    if 'Off' in command:
+        GPIO.output(red, 0)
+        bot.sendMessage(chat_id, "Red light turned off")
+
+bot = telepot.Bot('YOUR_BOT_API_KEY')
+print(bot.getMe())
+
+MessageLoop(bot, action).run_as_thread()
+
+print('I am listening...')
+
+while True:
+    time.sleep(10)
+   
+
+#homeauto
+WebIOPi Framework Installation Guide
+
+1. Download WebIOPi Framework:
+   - Ensure you're in the home directory.
+   - Run the following command to download the installer:
+     wget https://sourceforge.net/projects/webiopi/files/WebIOPI-0.7.1.tar.gz
+   - Extract the downloaded file:
+     tar xzvf WebIOPI-0.7.1.tar.gz
+
+2. Install Patch File:
+   - Download the patch file:
+     wget https://raw.githubusercontent.com/doublebind/raspi/master/webiopi-pi2bplus.patch
+   - Apply the patch using:
+     patch -p1 < webiopi-pi2bplus.patch
+
+3. Install WebIOPi Framework:
+   - Run the setup file:
+     ./setup.sh
+
+4. Test WebIOPi Installation:
+   - Run the following command to test the installation:
+     sudo webiopi -d -c /etc/webiopi/config
+   - Open your web browser and navigate to:
+     http://<Your Pi's IP Address>:8000
+
+5. Login to WebIOPi:
+   - When prompted, use the following credentials:
+     Username: webiopi
+     Password: raspberry
+
+6. Test GPIO Pins:
+   - Go to "GPIO Header" from the WebIOPi main menu to control your devices connected to the Raspberry Pi GPIO pins.
+
+

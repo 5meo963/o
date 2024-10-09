@@ -45,9 +45,6 @@ CLK          | Clock      | Pin 40 (GPIO21)     | Clock (GPIO21)
 
 wget https://github.com/timwaizenegger/raspberrypi-examples/archive/refs/heads/master.zip
 
-
-
-
 #Osiliscope
 Connecting ADS1115 to Raspberry Pi GPIO Pins
 ---------------------------------------------
@@ -94,6 +91,10 @@ Steps to Setup
 
 
 #Telegram
+sudo apt-get update
+sudo apt-get install python-pip
+sudo pip install teleport
+
 import random
 import datetime
 import time
